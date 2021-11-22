@@ -1,0 +1,117 @@
+<style>
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    cursor: default;
+  }
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+  }
+
+  h1 { 
+    padding: 15px;
+    border-bottom: 1px solid #E5E5E5;
+    font-size: 25px;
+  }
+
+  h3 {
+    padding: 0 15px;
+    margin: 0;
+    font-size: 13px;
+    padding-bottom: 5px;
+    margin-bottom: 0;
+  }
+
+  button {
+    margin: 15px;
+    display: inline-block;
+    padding: 10px 16px;
+    font-size: 12px;
+    border: 2px solid #18A0FB;
+    border-radius: 6px;
+    background-color: #18A0FB;
+    color: #fff;
+  }
+
+  button:active {
+    box-sizing: content-box;
+    border: 2px solid #158DDD;
+  }
+
+  #template_pages div {
+    padding: 5px 15px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  #template_pages div:hover {
+    background-color: #F0F0F0;
+  }
+
+  #template_pages .exists {
+    opacity: 0.5;
+    cursor: default;
+  }
+  
+</style>
+
+<h1>TempLatte</h1>
+
+<div class="content">
+  <h3>Pages</h3>
+  <div id="template_pages">
+    
+  </div>
+  <button id="create">Create template</button>
+</div>
+
+<script>
+
+function populateTemplateList (template_pages) {
+  for (const page of template_pages){
+    var node = document.createElement("div");
+    node.classList.add('template_item');
+    node.setAttribute('id', page.id);
+    var textnode = document.createTextNode(page.name);
+    if (page.exists){
+      node.classList.add('exists');
+    }
+    node.appendChild(textnode);
+    document.getElementById("template_pages").appendChild(node);
+  }
+}
+
+function updateTemplateList (template_pages) {
+  for (const page of template_pages){
+    if (page.exists) {
+      document.getElementById(page.id).classList.add('exists');
+    }
+  }
+}
+
+// Get event from code.ts
+onmessage = (event) => {
+  if (event.data.pluginMessage.template_pages) {
+    populateTemplateList(event.data.pluginMessage.template_pages);
+  }
+  if (event.data.pluginMessage.template_pages_update) {
+    updateTemplateList(event.data.pluginMessage.template_pages_update);
+  }
+}
+
+document.getElementById('create').onclick = () => {
+  parent.postMessage({ pluginMessage: { type: "createAllTemplatePages"}}, "*");
+}
+
+document.getElementById('template_pages').addEventListener('click', event => {
+    if (event.target.className === 'template_item') {
+      var pageName =  event.target.innerHTML;
+      parent.postMessage({ pluginMessage: { type: "createTemplatePage", pageName: pageName}}, "*");
+    }
+});
+
+</script>
