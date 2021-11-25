@@ -7,22 +7,20 @@ const pages = figma.root.children;
 let template_pages = [
   {name: "Table Of Contents", exists: false, id: "table-of-contents"},
   {name: "——— Implementation ———", exists: false, id: "implementation"},
-  {name: String.fromCodePoint(0x1F50D) + " Implementation review", exists: false, id: "implementation-review"},
-  {name: String.fromCodePoint(0x2B50) + " Latest Design", exists: false, id: "latest-design"},
-  {name: String.fromCodePoint(0x1F4D0) + " Specification", exists: false, id: "specification"},
+  {name: `🔍 Implementation review`, exists: false, id: "implementation-review"},
+  {name: `⭐️ Latest Design`, exists: false, id: "latest-design"},
+  {name: `📐 Specification`, exists: false, id: "specification"},
   {name: "——— Design ———", exists: false, id: "design"},
-  {name: String.fromCodePoint(0x1F4F2) + " Screen Flow", exists: false, id: "screen-flow"},
-  {name: String.fromCodePoint(0x1F4F1) + " Prototype", exists: false, id: "prototype"},
-  {name: String.fromCodePoint(0x270F) + " Wireframes", exists: false, id: "wireframes"},
-  {name: String.fromCodePoint(0x1F4A1) + " Ideation", exists: false, id: "ideation"},
-  {name: String.fromCodePoint(0x1F4C8) + " Analysis", exists: false, id: "analysis"},
-  {name: String.fromCodePoint(0x1F5C4) + " Archive", exists: false, id: "archive"}
+  {name: `📲 Screen Flow`, exists: false, id: "screen-flow"},
+  {name: `📱 Prototype`, exists: false, id: "prototype"},
+  {name: `✏️ Wireframes`, exists: false, id: "wireframes"},
+  {name: `💡 Ideation`, exists: false, id: "ideation"},
+  {name: `📈 Analysis`, exists: false, id: "analysis"},
+  {name: `🗄 Archive`, exists: false, id: "archive"}
 ];
 
 for (const page of template_pages) {
-  if (pageExists(page.name)) {
-    page.exists = true;
-  }
+  page.exists = figma.root.findOne(n => n.name === page.name) != null;
 }
 
 // Send data to plugin UI
@@ -37,14 +35,6 @@ function createTemplatePagesThatDoesntExist(template_pages) {
     template_page.exists = true;
   }
   return;
-}
-
-function pageExists(page) {
-  if (figma.root.findOne(n => n.name === page)) {
-    return true;
-  } else {
-    return false;
-  }
 }
 
 function updateList(page_name) {
@@ -88,3 +78,4 @@ figma.ui.onmessage = (event) => {
 // [*] Update list on add
 // [ ] Update list on remove
 // [*] Update list on add all
+// Disable Create All no more can be added
